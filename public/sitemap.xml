@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://veloluxury.my/</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veloluxury.my/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://veloluxury.my/"/>
+  </url>
+  
+  <!-- Main Pages -->
+  <url>
+    <loc>https://veloluxury.my/fleet</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veloluxury.my/fleet"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://veloluxury.my/fleet"/>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/about</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veloluxury.my/about"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://veloluxury.my/about"/>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/contact</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veloluxury.my/contact"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://veloluxury.my/contact"/>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/offers</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://veloluxury.my/offers"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://veloluxury.my/offers"/>
+  </url>
+  
+  <!-- Car Detail Pages -->
+  <url>
+    <loc>https://veloluxury.my/car/mercedes-cla-45-amg</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/car/bmw-5-series</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/car/range-rover-vogue</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/car/mercedes-s-class</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/car/lamborghini-huracan</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/car/nissan-gtr</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/car/porsche-911-turbo-s</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/car/range-rover-svr</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://veloluxury.my/car/rolls-royce-phantom</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+</urlset>
+

@@ -1,0 +1,13 @@
+# robots.txt for VELO Luxury Car Rental Website
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /preview_page.html
+
+# Sitemap location
+Sitemap: https://veloluxury.my/sitemap.xml
+
+# Crawl-delay (optional, helps prevent server overload)
+Crawl-delay: 1
+
