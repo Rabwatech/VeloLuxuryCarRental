@@ -135,20 +135,6 @@ CREATE TABLE IF NOT EXISTS offers (
 );
 
 -- ============================================
--- OFFER REDEMPTIONS - Track offer usage
--- ============================================
-CREATE TABLE IF NOT EXISTS offer_redemptions (
-  id SERIAL PRIMARY KEY,
-  offer_id INTEGER NOT NULL REFERENCES offers(id) ON DELETE CASCADE,
-  offer_code TEXT,
-  lead_id TEXT REFERENCES leads(id), -- Link to customer who used it
-  customer_name TEXT,
-  customer_email TEXT,
-  customer_phone TEXT,
-  redeemed_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ============================================
 -- LEADS TABLE - Enhanced with more fields
 -- ============================================
 CREATE TABLE IF NOT EXISTS leads (
@@ -179,6 +165,20 @@ CREATE TABLE IF NOT EXISTS leads (
   timestamp TIMESTAMPTZ DEFAULT NOW(),
   last_contacted_at TIMESTAMPTZ,
   updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================
+-- OFFER REDEMPTIONS - Track offer usage
+-- ============================================
+CREATE TABLE IF NOT EXISTS offer_redemptions (
+  id SERIAL PRIMARY KEY,
+  offer_id INTEGER NOT NULL REFERENCES offers(id) ON DELETE CASCADE,
+  offer_code TEXT,
+  lead_id TEXT REFERENCES leads(id), -- Link to customer who used it
+  customer_name TEXT,
+  customer_email TEXT,
+  customer_phone TEXT,
+  redeemed_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- ============================================
