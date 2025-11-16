@@ -9,13 +9,21 @@ export const VehicleSchema = z.object({
   id: z.string().min(1, 'Vehicle ID is required'),
   brand: z.string().min(1, 'Brand is required'),
   model: z.string().min(1, 'Model is required'),
-  year: z.number().int().min(1900).max(new Date().getFullYear() + 2),
-  pricePerDay: z.number().positive('Price must be positive'),
+  name: z.string().min(1, 'Name is required'),
+  name_ar: z.string().optional(),
+  year: z.number().int().min(1900).max(new Date().getFullYear() + 2).optional(),
+  price_per_day: z.number().positive('Price must be positive'),
   image: z.string().url('Invalid image URL'),
-  category: z.string().optional(),
-  specifications: z.record(z.string()).optional(),
+  images: z.array(z.string()).optional(),
+  collection: z.string().optional(),
+  collection_name: z.string().optional(),
+  collection_name_ar: z.string().optional(),
   description: z.string().optional(),
+  description_ar: z.string().optional(),
+  specs: z.record(z.any()).optional(),
   available: z.boolean().default(true),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
 });
 
 export type Vehicle = z.infer<typeof VehicleSchema>;
@@ -25,15 +33,19 @@ export type Vehicle = z.infer<typeof VehicleSchema>;
 // ============================================
 
 export const OfferSchema = z.object({
-  id: z.union([z.string(), z.number()]),
+  id: z.number().optional(),
   title: z.string().min(1, 'Title is required'),
+  title_ar: z.string().optional(),
   description: z.string().optional(),
+  description_ar: z.string().optional(),
   discount: z.string().optional(),
-  discountPercent: z.number().min(0).max(100).optional(),
-  validUntil: z.string().optional(),
+  discount_percent: z.number().min(0).max(100).optional(),
+  valid_until: z.string().optional(),
   image: z.string().optional(),
   terms: z.string().optional(),
   active: z.boolean().default(true),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
 });
 
 export type Offer = z.infer<typeof OfferSchema>;
@@ -61,8 +73,9 @@ export const LeadSchema = z.object({
   status: z.enum([LEAD_STATUS.NEW, LEAD_STATUS.CONTACTED, LEAD_STATUS.CONVERTED, LEAD_STATUS.CLOSED]).default(LEAD_STATUS.NEW),
   source: z.string().optional(),
   language: z.string().default('en'),
+  vehicle_id: z.string().optional(),
   timestamp: z.string().optional(),
-  updatedAt: z.string().optional(),
+  updated_at: z.string().optional(),
 });
 
 export type Lead = z.infer<typeof LeadSchema>;

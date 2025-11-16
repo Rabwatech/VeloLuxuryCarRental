@@ -42,7 +42,19 @@ VITE_CONTACT_PHONE=+60123456789
 VITE_CONTACT_EMAIL=info@veloluxury.my
 ```
 
-### 3. Create Admin User in Supabase
+### 3. Set Up Database Tables
+
+**IMPORTANT:** Run the database migration to create proper tables.
+
+1. Go to Supabase Dashboard: https://supabase.com/dashboard/project/kbcqytozzobqnabjizoa
+2. Click "SQL Editor" → "New Query"
+3. Copy the contents of `supabase/migrations/001_create_proper_tables.sql`
+4. Paste and click "Run"
+5. Verify tables created: Run `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name IN ('vehicles', 'offers', 'leads');`
+
+See [DATABASE_SETUP.md](./DATABASE_SETUP.md) for detailed instructions.
+
+### 4. Create Admin User in Supabase
 
 1. Go to your Supabase dashboard: https://supabase.com/dashboard/project/kbcqytozzobqnabjizoa
 2. Navigate to **Authentication** > **Users**
@@ -53,7 +65,9 @@ VITE_CONTACT_EMAIL=info@veloluxury.my
    - Auto Confirm User: **Enable** (check the box)
 5. Click **Create user**
 
-### 4. Update CORS Configuration
+### 5. Update CORS Configuration (Optional - for Edge Functions)
+
+**Note:** Since we're using Supabase client directly, the edge function CORS is not actively used. However, if you want to use it:
 
 Update the allowed origins in `src/supabase/functions/server/index.tsx`:
 
