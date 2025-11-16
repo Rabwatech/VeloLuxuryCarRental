@@ -16,7 +16,7 @@ INSERT INTO admins (id, email, password_hash, full_name, role, phone, is_active)
 (
   gen_random_uuid(),
   'admin@veloluxury.my',
-  '$2a$10$rQ5YhGQ8xvF.EqZJ5N5L2uK5vGm5h7tO6qPZ8h5L2uK5vGm5h7tO6',
+  '$2b$10$thnI5sMqCUT4HDjCyMhjE.qpnSNHgMqm15yWBrCJemffr/XX.sZAS',
   'Super Admin',
   'super_admin',
   '+60123456789',
@@ -25,7 +25,7 @@ INSERT INTO admins (id, email, password_hash, full_name, role, phone, is_active)
 (
   gen_random_uuid(),
   'manager@veloluxury.my',
-  '$2a$10$rQ5YhGQ8xvF.EqZJ5N5L2uK5vGm5h7tO6qPZ8h5L2uK5vGm5h7tO6',
+  '$2b$10$thnI5sMqCUT4HDjCyMhjE.qpnSNHgMqm15yWBrCJemffr/XX.sZAS',
   'Fleet Manager',
   'manager',
   '+60123456790',
