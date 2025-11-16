@@ -12,7 +12,7 @@ export function AdminDashboard() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<any>(null);
-  const { signOut, user } = useAuth();
+  const { signOut, admin } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,9 +81,10 @@ export function AdminDashboard() {
               Admin <span className="text-gold">Dashboard</span>
             </h1>
             <p className="text-gray-600">Manage your leads and monitor statistics</p>
-            {user && (
+            {admin && (
               <p className="text-sm text-gray-500 mt-2">
-                Logged in as: <span className="font-medium">{user.email}</span>
+                Logged in as: <span className="font-medium">{admin.email}</span>
+                {admin.role && <span className="text-xs ml-2 text-gold">({admin.role})</span>}
               </p>
             )}
           </div>

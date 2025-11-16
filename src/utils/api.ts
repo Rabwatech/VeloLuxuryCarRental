@@ -34,8 +34,15 @@ export const adminAPI = {
       if (error) throw error;
       if (!data) throw new Error('Invalid credentials');
 
-      // Note: In production, password verification should happen server-side
-      // This is a placeholder - implement proper bcrypt comparison on backend
+      // ⚠️ TEMPORARY PASSWORD CHECK - NOT SECURE FOR PRODUCTION
+      // TODO: Implement proper server-side bcrypt verification
+      // For now, accepting specific test passwords to unblock development
+      const validTestPasswords = ['Admin@123', 'Manager@123', 'password', 'admin'];
+      const isValidPassword = validTestPasswords.includes(credentials.password);
+
+      if (!isValidPassword) {
+        throw new Error('Invalid credentials');
+      }
 
       // Update last login
       await supabase
@@ -54,7 +61,7 @@ export const adminAPI = {
       console.error('Login failed:', error);
       return {
         success: false,
-        error: error.message || 'Login failed',
+        error: error.message || 'Invalid credentials',
       };
     }
   },

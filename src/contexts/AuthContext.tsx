@@ -1,10 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
-import type { User, Session } from '@jsr/supabase__supabase-js';
+import { adminAPI } from '../utils/api';
+import type { Admin } from '../types';
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  admin: Admin | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -12,46 +11,53 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const ADMIN_SESSION_KEY = 'velo_admin_session';
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [admin, setAdmin] = useState<Admin | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check active sessions
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    // Check for existing session in localStorage
+    const sessionData = localStorage.getItem(ADMIN_SESSION_KEY);
+    if (sessionData) {
+      try {
+        const adminData = JSON.parse(sessionData);
+        setAdmin(adminData);
+      } catch (error) {
+        console.error('Failed to parse admin session:', error);
+        localStorage.removeItem(ADMIN_SESSION_KEY);
+      }
+    }
+    setLoading(false);
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) throw error;
+    setLoading(true);
+    try {
+      const result = await adminAPI.login({ email, password });
+
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Login failed');
+      }
+
+      // Store admin session
+      setAdmin(result.data);
+      localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(result.data));
+    } catch (error: any) {
+      throw new Error(error.message || 'Invalid credentials');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    setAdmin(null);
+    localStorage.removeItem(ADMIN_SESSION_KEY);
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ admin, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
