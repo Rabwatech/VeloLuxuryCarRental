@@ -22,22 +22,46 @@ SELECT * FROM kv_store_749ca9a4;
 
 Save the results as a backup.
 
-### Step 2: Create New Tables
+### Step 2: Clean Up Old Tables (IMPORTANT!)
+
+**⚠️ If you have old tables from a previous migration, you MUST drop them first!**
+
+The new schema has different column structures. Running the new migration on top of old tables will cause errors like `column "category" does not exist`.
+
+**Option A: Drop old tables (RECOMMENDED for clean start)**
 
 1. Go to Supabase Dashboard → SQL Editor
-2. Open `supabase/migrations/001_create_proper_tables.sql`
+2. Open `supabase/migrations/000_cleanup_old_tables.sql`
+3. Copy and paste the entire SQL script
+4. Click "Run" to execute
+5. This will drop all old tables and prepare for fresh migration
+
+**Option B: Keep old data (Advanced)**
+
+If you have production data you need to migrate, see Step 7 for migration scripts.
+
+### Step 3: Create New Tables
+
+1. Go to Supabase Dashboard → SQL Editor
+2. Open `supabase/migrations/001_create_complete_schema.sql`
 3. Copy and paste the entire SQL script
 4. Click "Run" to execute
 
 This will create:
-- `vehicles` table
-- `offers` table
-- `leads` table
+- `admins` table (with roles)
+- `vehicles` table (with multiple pricing)
+- `vehicle_images` table
+- `vehicle_maintenance` table
+- `offers` table (with codes & expiration)
+- `offer_redemptions` table
+- `leads` table (with priority & assignment)
+- `lead_notes` table
+- `lead_reminders` table
 - Indexes for performance
 - Row Level Security (RLS) policies
-- Triggers for `updated_at` timestamps
+- Triggers for auto-update and usage tracking
 
-### Step 3: Verify Tables Created
+### Step 4: Verify Tables Created
 
 Run this query to verify:
 
@@ -45,21 +69,26 @@ Run this query to verify:
 SELECT table_name
 FROM information_schema.tables
 WHERE table_schema = 'public'
-AND table_name IN ('vehicles', 'offers', 'leads');
+AND table_name IN (
+  'admins', 'vehicles', 'vehicle_images', 'vehicle_maintenance',
+  'offers', 'offer_redemptions',
+  'leads', 'lead_notes', 'lead_reminders'
+)
+ORDER BY table_name;
 ```
 
-You should see all three tables listed.
+You should see all nine tables listed.
 
-### Step 4: Seed Initial Data (Optional)
+### Step 5: Seed Initial Data (Optional)
 
 If you want to add sample data for testing:
 
-1. Open `supabase/migrations/002_seed_data.sql`
+1. Open `supabase/migrations/002_seed_initial_data.sql`
 2. Customize the sample data or use your own
 3. Copy and paste into SQL Editor
 4. Click "Run"
 
-### Step 5: Update Application Code
+### Step 6: Update Application Code
 
 The application code has already been updated to use the new tables:
 
@@ -67,7 +96,7 @@ The application code has already been updated to use the new tables:
 - ✅ `src/types/index.ts` - Type definitions match new schema
 - ✅ RLS policies ensure security
 
-### Step 6: Test the Application
+### Step 7: Test the Application
 
 1. **Test Public Access** (not logged in):
    ```bash
@@ -83,7 +112,7 @@ The application code has already been updated to use the new tables:
    - View leads, statistics
    - Try updating lead status
 
-### Step 7: Migrate Existing Data (If Applicable)
+### Step 8: Migrate Existing Data (If Applicable)
 
 If you have existing data in the KV store, run this migration script:
 
@@ -142,26 +171,43 @@ FROM kv_store_749ca9a4
 WHERE key LIKE 'lead:%';
 ```
 
-### Step 8: Verify Migration
+### Step 9: Verify Migration
 
 ```sql
 -- Check record counts
-SELECT 'Vehicles' as table_name, COUNT(*) as count FROM vehicles
+SELECT 'Admins' as table_name, COUNT(*) as count FROM admins
+UNION ALL
+SELECT 'Vehicles', COUNT(*) FROM vehicles
+UNION ALL
+SELECT 'Vehicle Images', COUNT(*) FROM vehicle_images
+UNION ALL
+SELECT 'Maintenance Records', COUNT(*) FROM vehicle_maintenance
 UNION ALL
 SELECT 'Offers', COUNT(*) FROM offers
 UNION ALL
-SELECT 'Leads', COUNT(*) FROM leads;
+SELECT 'Offer Redemptions', COUNT(*) FROM offer_redemptions
+UNION ALL
+SELECT 'Leads', COUNT(*) FROM leads
+UNION ALL
+SELECT 'Lead Notes', COUNT(*) FROM lead_notes
+UNION ALL
+SELECT 'Lead Reminders', COUNT(*) FROM lead_reminders;
 
 -- Verify RLS is enabled
 SELECT tablename, rowsecurity
 FROM pg_tables
 WHERE schemaname = 'public'
-AND tablename IN ('vehicles', 'offers', 'leads');
+AND tablename IN (
+  'admins', 'vehicles', 'vehicle_images', 'vehicle_maintenance',
+  'offers', 'offer_redemptions',
+  'leads', 'lead_notes', 'lead_reminders'
+)
+ORDER BY tablename;
 ```
 
 All tables should show `rowsecurity = true`.
 
-### Step 9: Remove Old KV Store (Optional)
+### Step 10: Remove Old KV Store (Optional)
 
 ⚠️ **ONLY DO THIS AFTER VERIFYING EVERYTHING WORKS**
 
@@ -174,7 +220,7 @@ SELECT * FROM kv_store_749ca9a4;
 DROP TABLE kv_store_749ca9a4;
 ```
 
-### Step 10: Remove Edge Function (Optional)
+### Step 11: Remove Edge Function (Optional)
 
 The edge function (`src/supabase/functions/server/`) is no longer needed since we're using Supabase client directly. You can:
 
