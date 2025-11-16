@@ -19,7 +19,14 @@ import { BookingFlow } from "./components/BookingFlow";
 import { AboutPage } from "./components/AboutPage";
 import { ContactPage } from "./components/ContactPage";
 import { OffersPage } from "./components/OffersPage";
-import { AdminDashboard } from "./components/AdminDashboard";
+import { AdminLayout } from "./components/AdminLayout";
+import { DashboardPage } from "./components/admin/DashboardPage";
+import { FleetPage as AdminFleetPage } from "./components/admin/FleetPage";
+import { LeadsPage } from "./components/admin/LeadsPage";
+import { OffersPage as AdminOffersPage } from "./components/admin/OffersPage";
+import { MaintenancePage } from "./components/admin/MaintenancePage";
+import { AnalyticsPage } from "./components/admin/AnalyticsPage";
+import { SettingsPage } from "./components/admin/SettingsPage";
 import { LoginPage } from "./components/LoginPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { GoogleTagManager } from "./components/GoogleTagManager";
@@ -57,14 +64,27 @@ export default function App() {
                   <Route path="/offers" element={<OffersPage />} />
                   <Route path="/special-offers" element={<OffersPage />} />
                   <Route path="/login" element={<LoginPage />} />
+
+                  {/* Admin Routes */}
                   <Route
-                    path="/admin"
+                    path="/admin/*"
                     element={
                       <ProtectedRoute>
-                        <AdminDashboard />
+                        <AdminLayout>
+                          <Routes>
+                            <Route path="/" element={<DashboardPage />} />
+                            <Route path="/fleet" element={<AdminFleetPage />} />
+                            <Route path="/leads" element={<LeadsPage />} />
+                            <Route path="/offers" element={<AdminOffersPage />} />
+                            <Route path="/maintenance" element={<MaintenancePage />} />
+                            <Route path="/analytics" element={<AnalyticsPage />} />
+                            <Route path="/settings" element={<SettingsPage />} />
+                          </Routes>
+                        </AdminLayout>
                       </ProtectedRoute>
                     }
                   />
+
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </main>

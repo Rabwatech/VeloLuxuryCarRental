@@ -34,17 +34,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const result = await adminAPI.login({ email, password });
-    if (!result.success) {
-      throw new Error(result.error || 'Login failed');
+    setLoading(true);
+    try {
+      const result = await adminAPI.login({ email, password });
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Login failed');
+      }
+
+      // Store admin session in localStorage
+      localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(result.data));
+      setUser(result.data);
+    } catch (error: any) {
+      throw new Error(error.message || 'Invalid credentials');
+    } finally {
+      setLoading(false);
     }
-    if (!result.data) {
-      throw new Error('Login failed: No user data returned');
-    }
-    
-    // Store admin session in localStorage
-    localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(result.data));
-    setUser(result.data);
   };
 
   const signOut = async () => {

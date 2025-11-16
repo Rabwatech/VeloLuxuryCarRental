@@ -62,7 +62,7 @@ export const adminAPI = {
       console.error('Login failed:', error);
       return {
         success: false,
-        error: error.message || 'Login failed',
+        error: error.message || 'Invalid credentials',
       };
     }
   },
