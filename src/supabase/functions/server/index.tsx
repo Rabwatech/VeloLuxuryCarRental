@@ -7,15 +7,30 @@ const app = new Hono();
 // Enable logger
 app.use('*', logger(console.log));
 
-// Enable CORS for all routes and methods
+// Enable CORS with restrictive configuration
+// TODO: Update ALLOWED_ORIGINS with your actual production domain
+const ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://veloluxury.my',
+  'https://www.veloluxury.my',
+  // Add your production domain here
+];
+
 app.use(
   "/*",
   cors({
-    origin: "*",
+    origin: (origin) => {
+      // Allow requests with no origin (like mobile apps or Postman)
+      if (!origin) return true;
+      // Check if origin is in allowed list
+      return ALLOWED_ORIGINS.includes(origin);
+    },
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
     maxAge: 600,
+    credentials: true,
   }),
 );
 
