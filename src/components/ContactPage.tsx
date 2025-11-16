@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Phone, Mail, Clock, MessageCircle, Send } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -10,57 +12,87 @@ import { SEO } from './SEO';
 import { StructuredData, createLocalBusinessSchema } from './StructuredData';
 import { gtmPush } from './GoogleTagManager';
 import { trackContactFormSubmit } from './MetaPixel';
+import { ContactFormSchema } from '../types';
+import { WHATSAPP_NUMBER } from '../constants';
 
 export function ContactPage() {
   const { language, t } = useLanguage();
-  
-  const whatsappNumber = '+60123456789';
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const whatsappMessage = encodeURIComponent(
-    language === 'en' 
+    language === 'en'
       ? 'Hi VELO Luxury, I would like to get in touch with your team.'
       : 'مرحبًا VELO Luxury، أود التواصل مع فريقكم.'
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const phone = formData.get('phone');
-    const subject = formData.get('subject');
-    const message = formData.get('message');
+    setIsSubmitting(true);
 
-    // Save lead to Supabase
     try {
+      const formData = new FormData(e.currentTarget);
+      const data = {
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        phone: formData.get('phone') as string,
+        subject: formData.get('subject') as string,
+        message: formData.get('message') as string,
+      };
+
+      // Validate form data
+      const validatedData = ContactFormSchema.parse(data);
+
+      // Save lead to Supabase
       await leadsAPI.create({
         type: 'contact_form',
-        name,
-        email,
-        phone,
-        subject,
-        message,
+        ...validatedData,
         language,
         source: 'Contact Page',
       });
-      console.log('Lead saved to Supabase successfully');
-    } catch (error) {
-      console.error('Failed to save lead to Supabase:', error);
+
+      // Track conversion events
+      gtmPush('form_submission', {
+        form_name: 'Contact Form',
+        form_location: 'Contact Page',
+      });
+      trackContactFormSubmit();
+
+      // Show success message
+      toast.success(
+        language === 'en'
+          ? 'Message sent successfully! We will contact you soon.'
+          : 'تم إرسال الرسالة بنجاح! سنتواصل معك قريبًا.'
+      );
+
+      // Reset form
+      e.currentTarget.reset();
+
+      // Open WhatsApp
+      const whatsappMsg = encodeURIComponent(
+        language === 'en'
+          ? `New Contact Form Submission\n\nName: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nSubject: ${data.subject}\nMessage: ${data.message}`
+          : `نموذج اتصال جديد\n\nالاسم: ${data.name}\nالبريد الإلكتروني: ${data.email}\nالهاتف: ${data.phone}\nالموضوع: ${data.subject}\nالرسالة: ${data.message}`
+      );
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMsg}`, '_blank');
+
+    } catch (error: any) {
+      console.error('Failed to submit contact form:', error);
+
+      // Show user-friendly error message
+      if (error.errors) {
+        // Zod validation errors
+        const firstError = error.errors[0];
+        toast.error(firstError.message);
+      } else {
+        toast.error(
+          language === 'en'
+            ? 'Failed to send message. Please try again or contact us via WhatsApp.'
+            : 'فشل إرسال الرسالة. يرجى المحاولة مرة أخرى أو التواصل معنا عبر واتساب.'
+        );
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Track conversion events
-    gtmPush('form_submission', {
-      form_name: 'Contact Form',
-      form_location: 'Contact Page',
-    });
-    trackContactFormSubmit();
-
-    const whatsappMessage = encodeURIComponent(
-      language === 'en'
-        ? `New Contact Form Submission\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nSubject: ${subject}\nMessage: ${message}`
-        : `نموذج اتصال جديد\n\nالاسم: ${name}\nالبريد الإلكتروني: ${email}\nالهاتف: ${phone}\nالموضوع: ${subject}\nالرسالة: ${message}`
-    );
-
-    window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, '_blank');
   };
 
   return (

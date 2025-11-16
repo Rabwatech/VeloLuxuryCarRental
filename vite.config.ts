@@ -52,8 +52,19 @@
       },
     },
     build: {
-      target: 'esnext',
-      outDir: 'build',
+      target: 'ES2020',
+      outDir: 'dist',
+      minify: 'terser',
+      sourcemap: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'react-router-dom'],
+            supabase: ['@jsr/supabase__supabase-js'],
+          },
+        },
+      },
+      chunkSizeWarningLimit: 1000,
     },
     server: {
       port: 3000,

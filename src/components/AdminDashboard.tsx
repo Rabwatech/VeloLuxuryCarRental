@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { leadsAPI, statsAPI } from '../utils/api';
-import { Users, Mail, Phone, Calendar, TrendingUp } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { Users, Mail, Phone, Calendar, TrendingUp, LogOut } from 'lucide-react';
 
 export function AdminDashboard() {
   const [leads, setLeads] = useState<any[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<any>(null);
+  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadData();
@@ -50,6 +54,15 @@ export function AdminDashboard() {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Failed to sign out:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen pt-20 px-4 flex items-center justify-center">
@@ -62,11 +75,26 @@ export function AdminDashboard() {
     <div className="min-h-screen pt-20 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto py-12">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl text-navy mb-2" style={{ fontWeight: 700 }}>
-            Admin <span className="text-gold">Dashboard</span>
-          </h1>
-          <p className="text-gray-600">Manage your leads and monitor statistics</p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-4xl text-navy mb-2" style={{ fontWeight: 700 }}>
+              Admin <span className="text-gold">Dashboard</span>
+            </h1>
+            <p className="text-gray-600">Manage your leads and monitor statistics</p>
+            {user && (
+              <p className="text-sm text-gray-500 mt-2">
+                Logged in as: <span className="font-medium">{user.email}</span>
+              </p>
+            )}
+          </div>
+          <Button
+            onClick={handleSignOut}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <LogOut size={18} />
+            Sign Out
+          </Button>
         </div>
 
         {/* Statistics Cards */}

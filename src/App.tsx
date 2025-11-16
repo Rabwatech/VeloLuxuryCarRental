@@ -5,6 +5,9 @@ import {
   Navigate,
 } from "react-router-dom";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { Toaster } from "sonner";
 import { Navigation } from "./components/Navigation";
 import { Footer } from "./components/Footer";
 import { WhatsAppButton } from "./components/WhatsAppButton";
@@ -17,43 +20,61 @@ import { AboutPage } from "./components/AboutPage";
 import { ContactPage } from "./components/ContactPage";
 import { OffersPage } from "./components/OffersPage";
 import { AdminDashboard } from "./components/AdminDashboard";
+import { LoginPage } from "./components/LoginPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { GoogleTagManager } from "./components/GoogleTagManager";
 import { MetaPixel } from "./components/MetaPixel";
 import { ScrollToTop } from "./components/ScrollToTop";
 
 export default function App() {
+  // Only show DataSeeder in development mode
+  const isDevelopment = import.meta.env.DEV;
+
   return (
-    <LanguageProvider>
-      <GoogleTagManager />
-      <MetaPixel />
-      <Router>
-        <ScrollToTop />
-        <div className="flex flex-col min-h-screen">
-          <Navigation />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route
-                path="/preview_page.html"
-                element={<Navigate to="/" replace />}
-              />
-              <Route path="/fleet" element={<FleetPage />} />
-              <Route path="/car/:id" element={<CarDetailPage />} />
-              <Route path="/booking" element={<BookingFlow />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/about-us" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/offers" element={<OffersPage />} />
-              <Route path="/special-offers" element={<OffersPage />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-          <Footer />
-          <WhatsAppButton />
-          <DataSeeder />
-        </div>
-      </Router>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <AuthProvider>
+          <GoogleTagManager />
+          <MetaPixel />
+          <Toaster position="top-right" richColors />
+          <Router>
+            <ScrollToTop />
+            <div className="flex flex-col min-h-screen">
+              <Navigation />
+              <main className="flex-grow">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route
+                    path="/preview_page.html"
+                    element={<Navigate to="/" replace />}
+                  />
+                  <Route path="/fleet" element={<FleetPage />} />
+                  <Route path="/car/:id" element={<CarDetailPage />} />
+                  <Route path="/booking" element={<BookingFlow />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/about-us" element={<AboutPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/offers" element={<OffersPage />} />
+                  <Route path="/special-offers" element={<OffersPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute>
+                        <AdminDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </main>
+              <Footer />
+              <WhatsAppButton />
+              {isDevelopment && <DataSeeder />}
+            </div>
+          </Router>
+        </AuthProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   );
 }
