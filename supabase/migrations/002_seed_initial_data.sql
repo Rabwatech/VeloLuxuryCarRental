@@ -9,16 +9,14 @@
 -- ============================================
 -- SEED ADMINS
 -- ============================================
--- NOTE: Password hashing is currently done client-side with temporary validation
--- Passwords: "Admin@123" for admin, "Manager@123" for manager
--- These are validated in src/utils/api.ts adminAPI.login()
--- ⚠️ For production, implement proper server-side bcrypt hashing!
+-- Password: "Admin@123" (hashed with bcrypt)
+-- You should change these passwords immediately after setup!
 
 INSERT INTO admins (id, email, password_hash, full_name, role, phone, is_active) VALUES
 (
   gen_random_uuid(),
   'admin@veloluxury.my',
-  'temp_placeholder_Admin@123',
+  '$2b$10$thnI5sMqCUT4HDjCyMhjE.qpnSNHgMqm15yWBrCJemffr/XX.sZAS',
   'Super Admin',
   'super_admin',
   '+60123456789',
@@ -27,7 +25,7 @@ INSERT INTO admins (id, email, password_hash, full_name, role, phone, is_active)
 (
   gen_random_uuid(),
   'manager@veloluxury.my',
-  'temp_placeholder_Manager@123',
+  '$2b$10$thnI5sMqCUT4HDjCyMhjE.qpnSNHgMqm15yWBrCJemffr/XX.sZAS',
   'Fleet Manager',
   'manager',
   '+60123456790',

@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import bcrypt from 'bcryptjs';
 import type {
   Admin,
   AdminLoginCredentials,
@@ -32,16 +33,16 @@ export const adminAPI = {
         .single();
 
       if (error) throw error;
-      if (!data) throw new Error('Invalid credentials');
+      if (!data) throw new Error('Invalid email or password');
 
-      // ⚠️ TEMPORARY PASSWORD CHECK - NOT SECURE FOR PRODUCTION
-      // TODO: Implement proper server-side bcrypt verification
-      // For now, accepting specific test passwords to unblock development
-      const validTestPasswords = ['Admin@123', 'Manager@123', 'password', 'admin'];
-      const isValidPassword = validTestPasswords.includes(credentials.password);
-
-      if (!isValidPassword) {
+      // Verify password using bcrypt
+      if (!data.password_hash) {
         throw new Error('Invalid credentials');
+      }
+
+      const isPasswordValid = await bcrypt.compare(credentials.password, data.password_hash);
+      if (!isPasswordValid) {
+        throw new Error('Invalid email or password');
       }
 
       // Update last login
