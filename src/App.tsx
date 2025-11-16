@@ -46,52 +46,59 @@ export default function App() {
           <Toaster position="top-right" richColors />
           <Router>
             <ScrollToTop />
-            <div className="flex flex-col min-h-screen">
-              <Navigation />
-              <main className="flex-grow">
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route
-                    path="/preview_page.html"
-                    element={<Navigate to="/" replace />}
-                  />
-                  <Route path="/fleet" element={<FleetPage />} />
-                  <Route path="/car/:id" element={<CarDetailPage />} />
-                  <Route path="/booking" element={<BookingFlow />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/about-us" element={<AboutPage />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route path="/offers" element={<OffersPage />} />
-                  <Route path="/special-offers" element={<OffersPage />} />
-                  <Route path="/login" element={<LoginPage />} />
+            <Routes>
+              {/* Admin Routes - Separate Layout */}
+              <Route
+                path="/admin/*"
+                element={
+                  <ProtectedRoute>
+                    <AdminLayout>
+                      <Routes>
+                        <Route path="/" element={<DashboardPage />} />
+                        <Route path="/fleet" element={<AdminFleetPage />} />
+                        <Route path="/leads" element={<LeadsPage />} />
+                        <Route path="/offers" element={<AdminOffersPage />} />
+                        <Route path="/maintenance" element={<MaintenancePage />} />
+                        <Route path="/analytics" element={<AnalyticsPage />} />
+                        <Route path="/settings" element={<SettingsPage />} />
+                      </Routes>
+                    </AdminLayout>
+                  </ProtectedRoute>
+                }
+              />
 
-                  {/* Admin Routes */}
-                  <Route
-                    path="/admin/*"
-                    element={
-                      <ProtectedRoute>
-                        <AdminLayout>
-                          <Routes>
-                            <Route path="/" element={<DashboardPage />} />
-                            <Route path="/fleet" element={<AdminFleetPage />} />
-                            <Route path="/leads" element={<LeadsPage />} />
-                            <Route path="/offers" element={<AdminOffersPage />} />
-                            <Route path="/maintenance" element={<MaintenancePage />} />
-                            <Route path="/analytics" element={<AnalyticsPage />} />
-                            <Route path="/settings" element={<SettingsPage />} />
-                          </Routes>
-                        </AdminLayout>
-                      </ProtectedRoute>
-                    }
-                  />
-
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </main>
-              <Footer />
-              <WhatsAppButton />
-              {isDevelopment && <DataSeeder />}
-            </div>
+              {/* Public Routes - Standard Layout */}
+              <Route
+                path="/*"
+                element={
+                  <div className="flex flex-col min-h-screen">
+                    <Navigation />
+                    <main className="flex-grow">
+                      <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route
+                          path="/preview_page.html"
+                          element={<Navigate to="/" replace />}
+                        />
+                        <Route path="/fleet" element={<FleetPage />} />
+                        <Route path="/car/:id" element={<CarDetailPage />} />
+                        <Route path="/booking" element={<BookingFlow />} />
+                        <Route path="/about" element={<AboutPage />} />
+                        <Route path="/about-us" element={<AboutPage />} />
+                        <Route path="/contact" element={<ContactPage />} />
+                        <Route path="/offers" element={<OffersPage />} />
+                        <Route path="/special-offers" element={<OffersPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                      </Routes>
+                    </main>
+                    <Footer />
+                    <WhatsAppButton />
+                    {isDevelopment && <DataSeeder />}
+                  </div>
+                }
+              />
+            </Routes>
           </Router>
         </AuthProvider>
       </LanguageProvider>
