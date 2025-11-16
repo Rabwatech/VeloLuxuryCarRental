@@ -287,7 +287,7 @@ export function CarDetailPage() {
               <CarIcon size={32} className="text-gold mx-auto mb-3" />
               <p className="text-gray-600 mb-2 text-sm">{language === 'ar' ? 'المحرك' : 'Engine'}</p>
               <p className="text-navy text-lg" style={{ fontWeight: 700 }}>
-                {language === 'ar' ? car.specs.engineAr : car.specs.engine}
+                {language === 'ar' ? car.specs?.engineAr : car.specs?.engine}
               </p>
             </motion.div>
 
@@ -301,7 +301,7 @@ export function CarDetailPage() {
               <Gauge size={32} className="text-gold mx-auto mb-3" />
               <p className="text-gray-600 mb-2 text-sm">{language === 'ar' ? 'ناقل الحركة' : 'Transmission'}</p>
               <p className="text-navy text-lg" style={{ fontWeight: 700 }}>
-                {language === 'ar' ? car.specs.transmissionAr : car.specs.transmission}
+                {language === 'ar' ? car.specs?.transmissionAr : car.specs?.transmission}
               </p>
             </motion.div>
 
@@ -315,7 +315,7 @@ export function CarDetailPage() {
               <Users size={32} className="text-gold mx-auto mb-3" />
               <p className="text-gray-600 mb-2 text-sm">{language === 'ar' ? 'المقاعد' : 'Seats'}</p>
               <p className="text-navy text-lg" style={{ fontWeight: 700 }}>
-                {car.specs.seats}
+                {car.specs?.seats}
               </p>
             </motion.div>
 
@@ -329,7 +329,7 @@ export function CarDetailPage() {
               <Zap size={32} className="text-gold mx-auto mb-3" />
               <p className="text-gray-600 mb-2 text-sm">{language === 'ar' ? 'القوة' : 'Power'}</p>
               <p className="text-navy text-lg" style={{ fontWeight: 700 }}>
-                {car.specs.power}
+                {car.specs?.power}
               </p>
             </motion.div>
           </div>
@@ -348,7 +348,7 @@ export function CarDetailPage() {
                   {language === 'ar' ? 'السرعة القصوى' : 'Top Speed'}
                 </p>
                 <p className="text-3xl" style={{ fontWeight: 800 }}>
-                  {car.specs.topSpeed}
+                  {car.specs?.topSpeed}
                 </p>
               </div>
               <div>
@@ -357,7 +357,7 @@ export function CarDetailPage() {
                   {language === 'ar' ? 'التسارع' : 'Acceleration'}
                 </p>
                 <p className="text-3xl" style={{ fontWeight: 800 }}>
-                  {car.specs.acceleration}
+                  {car.specs?.acceleration}
                 </p>
               </div>
             </div>
